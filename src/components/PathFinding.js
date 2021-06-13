@@ -1,6 +1,7 @@
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import Node from "./Node";
 import BFSAlgo from "./BFSAlgo";
+import DFSAlgo from "./DFSAlgo";
 import "./PathFinding.css";
 import Header from "../components/Header";
 import Item from "../components/Item";
@@ -8,6 +9,7 @@ import { FiTarget } from "react-icons/fi";
 import { AiFillDownCircle } from "react-icons/ai";
 
 function PathFinding() {
+  const [algoChoice, setAlgoChoice] = useState("BFS");
   const startRow = useRef(8);
   const startCol = useRef(14);
   const endRow = useRef(8);
@@ -23,6 +25,27 @@ function PathFinding() {
     if (document.getElementById(`${coord}`).classList.contains("wall")) {
       document.getElementById(`${coord}`).classList.remove("wall");
     } else document.getElementById(`${coord}`).classList.add("wall");
+  };
+
+  const clickVisualizeHandler = () => {
+    switch (algoChoice) {
+      case "BFS":
+        return BFSAlgo(
+          startRow.current,
+          startCol.current,
+          endRow.current,
+          endCol.current
+        );
+      case "DFS":
+        return DFSAlgo(
+          startRow.current,
+          startCol.current,
+          endRow.current,
+          endCol.current
+        );
+      default:
+        return;
+    }
   };
 
   const onItemDragStart = (e) => {
@@ -44,7 +67,6 @@ function PathFinding() {
 
   const onDragOver = (event) => {
     event.preventDefault();
-    // console.log(event);
     if (flag === 1) return;
     const coord = event.target.id.split(",");
     if (
@@ -59,6 +81,9 @@ function PathFinding() {
     if (document.getElementById(`${coord}`).classList.contains("wall")) {
       document.getElementById(`${coord}`).classList.remove("wall");
     } else document.getElementById(`${coord}`).classList.add("wall");
+
+    document.getElementById(`${coord}`).classList.remove("path");
+    document.getElementById(`${coord}`).classList.remove("visited");
   };
 
   const onDrop = (e) => {
@@ -156,16 +181,10 @@ function PathFinding() {
   return (
     <div className="nowrap">
       <Header
-        onClickAlgo={() => {}}
+        algoChoice={algoChoice}
+        setAlgoChoice={setAlgoChoice}
         onClickClearPath={restart}
-        onClickVisualize={() => {
-          BFSAlgo(
-            startRow.current,
-            startCol.current,
-            endRow.current,
-            endCol.current
-          );
-        }}
+        onClickVisualize={clickVisualizeHandler}
       />
       <div className="instructions">
         <div className="sub-instruction">

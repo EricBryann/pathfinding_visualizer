@@ -1,7 +1,3 @@
-.red {
-  background-color: red;
-}
-
 .visited {
   animation-name: visitedAnimation;
   animation-duration: 1.5s;

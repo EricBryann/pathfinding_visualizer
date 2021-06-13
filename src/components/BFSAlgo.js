@@ -1,19 +1,9 @@
-import "./BFSAlgo.css";
+import "./algo.css";
+import { delay, clearPath } from "./algo";
 
-function delay(delayInms) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, delayInms);
-  });
-}
 const BFSAlgo = async (startRow, startCol, endRow, endCol) => {
-  for (let i = 0; i < 20; i++) {
-    for (let j = 0; j < 50; j++) {
-      document.getElementById(`${[i, j]}`).classList.remove("path");
-      document.getElementById(`${[i, j]}`).classList.remove("visited");
-    }
-  }
+  clearPath();
+
   const dirRow = [-1, 0, 1, 0];
   const dirCol = [0, 1, 0, -1];
   let x = [startRow];
