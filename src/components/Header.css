@@ -1,0 +1,18 @@
+.header-class {
+  background-color: rgb(8, 68, 105);
+  display: grid;
+  margin-bottom: 20px;
+  border-bottom: 2px solid blueviolet;
+}
+.button-class {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.title {
+  margin-top: 10px;
+  color: white;
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}

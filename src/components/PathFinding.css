@@ -1,0 +1,56 @@
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.no-space {
+  margin-bottom: -5px;
+}
+
+button {
+  margin-bottom: 20px;
+}
+
+.wall {
+  background-color: rgb(12, 53, 71);
+}
+.nowrap {
+  white-space: nowrap;
+}
+.header {
+  margin-bottom: 20px;
+}
+
+.instructions {
+  display: flex;
+  margin-bottom: 20px;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.sub-instruction {
+  display: flex;
+  flex-direction: row;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.word {
+  margin-left: 4px;
+}
+
+.instruction-node-wall {
+  background-color: rgb(12, 53, 71);
+}
+
+.instruction-node-visited {
+  background-color: rgba(0, 174, 255, 0.466);
+  border: 1px solid white;
+}
+
+.instruction-node-goal {
+  background-color: rgba(187, 255, 0, 0.692);
+  border: 1px solid white;
+}

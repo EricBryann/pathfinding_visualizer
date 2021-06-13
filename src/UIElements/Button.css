@@ -1,0 +1,15 @@
+.button {
+  width: 6rem;
+  height: 2.5rem;
+  border-radius: 3%;
+  background-color: rgba(24, 224, 131, 0.397);
+  color: white;
+  flex-wrap: nowrap;
+  border-radius: 5px;
+}
+
+.button:hover {
+  color: black;
+  background-color: lightblue;
+  cursor: pointer;
+}
