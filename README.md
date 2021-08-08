@@ -1,4 +1,5 @@
 https://pathfinding-visualizer-nine.vercel.app/
+
 This is a pathfinding visualizer I built after my data structures course this semester.
 
 I used React for this visualizer.
