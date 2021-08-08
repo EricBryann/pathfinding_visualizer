@@ -58,6 +58,8 @@ const BFSAlgo = async (startRow, startCol, endRow, endCol) => {
       y.push(neighborY);
     }
   }
+
+  if (!visited[endRow][endCol]) return false;
   let pathX = [];
   let pathY = [];
   while (currentX !== parseInt(startRow) || currentY !== parseInt(startCol)) {
@@ -76,6 +78,7 @@ const BFSAlgo = async (startRow, startCol, endRow, endCol) => {
     document.getElementById(`${[currentX, currentY]}`).classList.add("path");
     await delay(30);
   }
+  return true;
 };
 
 export default BFSAlgo;

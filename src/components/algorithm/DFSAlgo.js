@@ -54,26 +54,22 @@ const DFSAlgo = async (startRow, startCol, endRow, endCol) => {
   };
 
   await DFS(startRow, startCol, endRow, endCol);
+  if (!found) return false;
 
   let pathX = [];
   let pathY = [];
   let row = endRow;
   let col = endCol;
 
-  for (let i = 14; i < 50; i++) {
-    console.log(parentX[0][i]);
-    console.log(parentY[0][i]);
-  }
   while (endRow !== parseInt(startRow) || endCol !== parseInt(startCol)) {
     let a = endRow;
     let b = endCol;
     endRow = parentX[endRow][endCol];
     endCol = parentY[a][b];
-    console.log(endRow);
-    console.log(endCol);
     pathX.unshift(endRow);
     pathY.unshift(endCol);
   }
+
   pathX.push(row);
   pathY.push(col);
   while (pathX.length !== 0) {
@@ -82,6 +78,7 @@ const DFSAlgo = async (startRow, startCol, endRow, endCol) => {
     document.getElementById(`${[endRow, endCol]}`).classList.add("path");
     await delay(30);
   }
+  return true;
 };
 
 export default DFSAlgo;

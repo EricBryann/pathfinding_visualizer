@@ -54,3 +54,9 @@ button {
   background-color: rgba(187, 255, 0, 0.692);
   border: 1px solid white;
 }
+
+.error {
+  color: red;
+  font-size: 20px;
+  min-height: 30px;
+}
