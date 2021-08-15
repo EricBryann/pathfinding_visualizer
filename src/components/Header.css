@@ -32,5 +32,6 @@
 
 .select {
   width: 100px;
-  border-radius: 10px;
+  height: 25px;
+  border-radius: 5px;
 }
