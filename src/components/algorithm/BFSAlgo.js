@@ -1,5 +1,14 @@
 import "./algo.css";
 import { delay, clearPath } from "./algo";
+import { addPath, addVisitedPath, hasWall } from "../util";
+
+const isOutOfBound = (X, Y) => {
+  return X < 0 || Y < 0 || X > 19 || Y > 49;
+};
+
+const hasFoundEndPoint = (currentX, currentY, endRow, endCol) => {
+  return currentX === parseInt(endRow) && currentY === parseInt(endCol);
+};
 
 const BFSAlgo = async (startRow, startCol, endRow, endCol, delayTime) => {
   clearPath();
@@ -30,26 +39,24 @@ const BFSAlgo = async (startRow, startCol, endRow, endCol, delayTime) => {
     let Y = y.shift();
     var currentX = parseInt(X);
     var currentY = parseInt(Y);
+    const currentCoord = [X, Y];
+    addVisitedPath(currentCoord);
 
-    document.getElementById(`${[X, Y]}`).classList.add("visited");
-    if (currentX === parseInt(endRow) && currentY === parseInt(endCol)) {
+    if (hasFoundEndPoint(currentX, currentY, endRow, endCol)) {
       break;
     }
     await delay(1);
     for (let i = 0; i < 4; i++) {
       let neighborX = currentX + dirRow[i];
       let neighborY = currentY + dirCol[i];
-      if (neighborX < 0 || neighborY < 0 || neighborX > 19 || neighborY > 49) {
-        continue;
-      }
       if (
-        document
-          .getElementById(`${[neighborX, neighborY]}`)
-          .classList.contains("wall")
+        isOutOfBound(neighborX, neighborY) ||
+        hasWall(neighborX, neighborY) ||
+        visited[neighborX][neighborY]
       ) {
         continue;
       }
-      if (visited[neighborX][neighborY] === true) continue;
+
       visited[neighborX][neighborY] = true;
       parentX[neighborX][neighborY] = currentX;
       parentY[neighborX][neighborY] = currentY;
@@ -74,7 +81,8 @@ const BFSAlgo = async (startRow, startCol, endRow, endCol, delayTime) => {
   while (pathX.length !== 0) {
     let currentX = pathX.shift();
     let currentY = pathY.shift();
-    document.getElementById(`${[currentX, currentY]}`).classList.add("path");
+    const currentCoord = [currentX, currentY];
+    addPath(currentCoord);
     await delay(delayTime);
   }
   return true;

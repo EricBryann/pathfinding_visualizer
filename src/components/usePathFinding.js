@@ -133,9 +133,9 @@ export default function usePathFinding() {
     }
 
     removeWall(coord);
+
     const item = document.getElementById(item_id);
     item.style.display = "block";
-
     event.target.appendChild(item);
   };
 

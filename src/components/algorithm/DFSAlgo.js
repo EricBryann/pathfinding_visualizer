@@ -1,5 +1,10 @@
 import "./algo.css";
 import { clearPath, delay } from "./algo";
+import { addVisitedPath, hasWall } from "../util";
+
+const isOutOfBound = (X, Y) => {
+  return X < 0 || Y < 0 || X > 19 || Y > 49;
+};
 
 const DFSAlgo = async (startRow, startCol, endRow, endCol, delayTime) => {
   clearPath();
@@ -26,27 +31,28 @@ const DFSAlgo = async (startRow, startCol, endRow, endCol, delayTime) => {
     if (startRow === endRow && startCol === endCol) found = true;
     if (visited[startRow][startCol]) return;
     visited[startRow][startCol] = true;
+
     let X = parseInt(startRow);
     let Y = parseInt(startCol);
-    document.getElementById(`${[X, Y]}`).classList.add("visited");
+    const currentCoord = [X, Y];
+    addVisitedPath(currentCoord);
+
     await delay(1);
+
     const dirRow = [-1, 0, 1, 0];
     const dirCol = [0, 1, 0, -1];
     for (let i = 0; i < 4; i++) {
       if (found) return;
       let neighborX = startRow + dirRow[i];
       let neighborY = startCol + dirCol[i];
-      if (neighborX < 0 || neighborY < 0 || neighborX > 19 || neighborY > 49) {
-        continue;
-      }
       if (
-        document
-          .getElementById(`${[neighborX, neighborY]}`)
-          .classList.contains("wall")
+        isOutOfBound(neighborX, neighborY) ||
+        hasWall(neighborX, neighborY) ||
+        visited[neighborX][neighborY]
       ) {
         continue;
       }
-      if (visited[neighborX][neighborY]) continue;
+
       parentX[neighborX][neighborY] = startRow;
       parentY[neighborX][neighborY] = startCol;
       await DFS(neighborX, neighborY, endRow, endCol);
