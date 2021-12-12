@@ -6,6 +6,14 @@ import Node from "./Node";
 import { FiTarget } from "react-icons/fi";
 import { AiFillDownCircle } from "react-icons/ai";
 import { DELAY_TIME } from "./algorithm/constants";
+import {
+  hasWall,
+  removeWall,
+  removePath,
+  removeVisitedPath,
+  addWall,
+  getCoordFromId,
+} from "./util";
 
 export default function usePathFinding() {
   const [algoChoice, setAlgoChoice] = useState("BFS");
@@ -20,36 +28,12 @@ export default function usePathFinding() {
   let prevY = 100;
   var flag = 0;
 
-  const hasWall = (coord) => {
-    return document.getElementById(`${coord}`).classList.contains("wall");
-  };
-
-  const removeWall = (coord) => {
-    document.getElementById(`${coord}`).classList.remove("wall");
-  };
-
-  const removePath = (coord) => {
-    document.getElementById(`${coord}`).classList.remove("path");
-  };
-
-  const removeVisitedPath = (coord) => {
-    document.getElementById(`${coord}`).classList.remove("visited");
-  };
-
-  const addWall = (coord) => {
-    document.getElementById(`${coord}`).classList.add("wall");
-  };
-
   const isOccupied = (coord) => {
     return (
       (coord[0] === prevX && coord[1] === prevY) ||
       (coord[0] === startRow && coord[1] === startCol) ||
       (coord[0] === endRow && coord[1] === endCol)
     );
-  };
-
-  const getCoordFromId = (id) => {
-    return id.split(",");
   };
 
   const clickHandler = (event) => {
@@ -167,64 +151,70 @@ export default function usePathFinding() {
     }
   };
 
+  const addStartAndEndPoints = (newGrid) => {
+    newGrid[35] = (
+      <Node
+        key={"8-35"}
+        id={"[8, 35]"}
+        onClick={clickHandler}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+      >
+        <Item
+          id="end"
+          onDragStart={onItemDragStart}
+          onDragOver={onItemDragOver}
+        >
+          <FiTarget size={23} />
+        </Item>
+      </Node>
+    );
+
+    newGrid[14] = (
+      <Node
+        key={"8-14"}
+        id={"[8, 14]"}
+        onClick={clickHandler}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+      >
+        <Item
+          id="start"
+          onDragStart={onItemDragStart}
+          onDragOver={onItemDragOver}
+        >
+          <AiFillDownCircle size={23} />
+        </Item>
+      </Node>
+    );
+  };
+
   for (let i = 0; i < 20; i++) {
     let newGrid = [];
     for (let j = 0; j < 50; j++) {
-      if (i === 8 && j === 35) {
-        newGrid.push(
-          <Node
-            key={`${i}-${j}`}
-            id={`${[i, j]}`}
-            onClick={clickHandler}
-            onDrop={onDrop}
-            onDragOver={onDragOver}
-          >
-            <Item
-              id="end"
-              onDragStart={onItemDragStart}
-              onDragOver={onItemDragOver}
-            >
-              <FiTarget size={23} />
-            </Item>
-          </Node>
-        );
-      } else if (i === 8 && j === 14) {
-        newGrid.push(
-          <Node
-            key={`${i}-${j}`}
-            id={`${[i, j]}`}
-            onClick={clickHandler}
-            onDrop={onDrop}
-            onDragOver={onDragOver}
-          >
-            <Item
-              id="start"
-              onDragStart={onItemDragStart}
-              onDragOver={onItemDragOver}
-            >
-              <AiFillDownCircle size={23} />
-            </Item>
-          </Node>
-        );
-      } else {
-        newGrid.push(
-          <Node
-            key={`${i}-${j}`}
-            id={`${[i, j]}`}
-            onClick={clickHandler}
-            className="node"
-            onDrop={onDrop}
-            onDragOver={onDragOver}
-          />
-        );
-      }
+      newGrid.push(
+        <Node
+          key={`${i}-${j}`}
+          id={`${[i, j]}`}
+          onClick={clickHandler}
+          className="node"
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+        />
+      );
     }
+
+    if (i === 8) {
+      addStartAndEndPoints(newGrid);
+    }
+
     grid.push(
       <div key={i} className="no-space">
         {newGrid}
       </div>
     );
   }
+
   return {
     algoChoice,
     setAlgoChoice,
