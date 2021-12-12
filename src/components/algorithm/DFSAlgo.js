@@ -1,7 +1,7 @@
 import "./algo.css";
 import { clearPath, delay } from "./algo";
 
-const DFSAlgo = async (startRow, startCol, endRow, endCol) => {
+const DFSAlgo = async (startRow, startCol, endRow, endCol, delayTime) => {
   clearPath();
   let visited = [];
   let parentX = [];
@@ -76,7 +76,7 @@ const DFSAlgo = async (startRow, startCol, endRow, endCol) => {
     let endRow = pathX.shift();
     let endCol = pathY.shift();
     document.getElementById(`${[endRow, endCol]}`).classList.add("path");
-    await delay(30);
+    await delay(delayTime);
   }
   return true;
 };

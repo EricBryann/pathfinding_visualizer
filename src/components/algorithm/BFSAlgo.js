@@ -1,7 +1,7 @@
 import "./algo.css";
 import { delay, clearPath } from "./algo";
 
-const BFSAlgo = async (startRow, startCol, endRow, endCol) => {
+const BFSAlgo = async (startRow, startCol, endRow, endCol, delayTime) => {
   clearPath();
 
   const dirRow = [-1, 0, 1, 0];
@@ -36,7 +36,6 @@ const BFSAlgo = async (startRow, startCol, endRow, endCol) => {
       break;
     }
     await delay(1);
-
     for (let i = 0; i < 4; i++) {
       let neighborX = currentX + dirRow[i];
       let neighborY = currentY + dirCol[i];
@@ -76,7 +75,7 @@ const BFSAlgo = async (startRow, startCol, endRow, endCol) => {
     let currentX = pathX.shift();
     let currentY = pathY.shift();
     document.getElementById(`${[currentX, currentY]}`).classList.add("path");
-    await delay(30);
+    await delay(delayTime);
   }
   return true;
 };

@@ -5,6 +5,7 @@ import Item from "../components/Item";
 import Node from "./Node";
 import { FiTarget } from "react-icons/fi";
 import { AiFillDownCircle } from "react-icons/ai";
+import { DELAY_TIME } from "./algorithm/constants";
 
 export default function usePathFinding() {
   const [algoChoice, setAlgoChoice] = useState("BFS");
@@ -19,42 +20,77 @@ export default function usePathFinding() {
   let prevY = 100;
   var flag = 0;
 
+  const hasWall = (coord) => {
+    return document.getElementById(`${coord}`).classList.contains("wall");
+  };
+
+  const removeWall = (coord) => {
+    document.getElementById(`${coord}`).classList.remove("wall");
+  };
+
+  const removePath = (coord) => {
+    document.getElementById(`${coord}`).classList.remove("path");
+  };
+
+  const removeVisitedPath = (coord) => {
+    document.getElementById(`${coord}`).classList.remove("visited");
+  };
+
+  const addWall = (coord) => {
+    document.getElementById(`${coord}`).classList.add("wall");
+  };
+
+  const isOccupied = (coord) => {
+    return (
+      (coord[0] === prevX && coord[1] === prevY) ||
+      (coord[0] === startRow && coord[1] === startCol) ||
+      (coord[0] === endRow && coord[1] === endCol)
+    );
+  };
+
+  const getCoordFromId = (id) => {
+    return id.split(",");
+  };
+
   const clickHandler = (event) => {
     const coord = event.target.id;
     if (!coord) return;
-    if (document.getElementById(`${coord}`).classList.contains("wall")) {
-      document.getElementById(`${coord}`).classList.remove("wall");
-    } else document.getElementById(`${coord}`).classList.add("wall");
+
+    if (hasWall(coord)) {
+      removeWall(coord);
+    } else {
+      addWall(coord);
+    }
   };
 
   const clickVisualizeHandler = async () => {
     setIsAlgoRunning(true);
     setError("");
     let hasPath;
+
+    const runAlgo = async (algo) => {
+      return await algo(
+        startRow.current,
+        startCol.current,
+        endRow.current,
+        endCol.current,
+        DELAY_TIME
+      );
+    };
+
     switch (algoChoice) {
       case "BFS":
-        hasPath = await BFSAlgo(
-          startRow.current,
-          startCol.current,
-          endRow.current,
-          endCol.current
-        );
-
+        hasPath = await runAlgo(BFSAlgo);
         if (!hasPath) setError("No path found!");
         break;
       case "DFS":
-        hasPath = await DFSAlgo(
-          startRow.current,
-          startCol.current,
-          endRow.current,
-          endCol.current
-        );
-
+        hasPath = await runAlgo(DFSAlgo);
         if (!hasPath) setError("No path found!");
         break;
       default:
         break;
     }
+
     setIsAlgoRunning(false);
   };
 
@@ -76,33 +112,34 @@ export default function usePathFinding() {
   const onDragOver = (event) => {
     event.preventDefault();
     if (flag === 1) return;
-    const coord = event.target.id.split(",");
-    if (
-      (coord[0] === prevX && coord[1] === prevY) ||
-      (coord[0] === startRow && coord[1] === startCol) ||
-      (coord[0] === endRow && coord[1] === endCol)
-    ) {
+    const coord = getCoordFromId(event.target.id);
+
+    if (isOccupied(coord)) {
       return;
     }
+
     prevX = coord[0];
     prevY = coord[1];
-    if (document.getElementById(`${coord}`).classList.contains("wall")) {
-      document.getElementById(`${coord}`).classList.remove("wall");
-    } else document.getElementById(`${coord}`).classList.add("wall");
 
-    document.getElementById(`${coord}`).classList.remove("path");
-    document.getElementById(`${coord}`).classList.remove("visited");
+    if (hasWall(coord)) {
+      removeWall(coord);
+    } else {
+      addWall(coord);
+    }
+
+    removePath(coord);
+    removeVisitedPath(coord);
   };
 
-  const onDrop = (e) => {
+  const onDrop = (event) => {
     flag = 0;
-    e.preventDefault();
-    const item_id = e.dataTransfer.getData("item_id");
+    event.preventDefault();
+    const item_id = event.dataTransfer.getData("item_id");
 
     if (!item_id) {
       return;
     }
-    const coord = e.target.id.split(",");
+    const coord = getCoordFromId(event.target.id);
     if (item_id === "start") {
       startRow.current = parseInt(coord[0]);
       startCol.current = parseInt(coord[1]);
@@ -110,20 +147,22 @@ export default function usePathFinding() {
       endRow.current = parseInt(coord[0]);
       endCol.current = parseInt(coord[1]);
     }
-    document.getElementById(`${[coord[0], coord[1]]}`).classList.remove("wall");
+
+    removeWall(coord);
     const item = document.getElementById(item_id);
     item.style.display = "block";
 
-    e.target.appendChild(item);
+    event.target.appendChild(item);
   };
 
   const restart = () => {
     setError("");
     for (let i = 0; i < 20; i++) {
       for (let j = 0; j < 50; j++) {
-        document.getElementById(`${[i, j]}`).classList.remove("wall");
-        document.getElementById(`${[i, j]}`).classList.remove("path");
-        document.getElementById(`${[i, j]}`).classList.remove("visited");
+        const currentCoord = [i, j];
+        removeWall(currentCoord);
+        removePath(currentCoord);
+        removeVisitedPath(currentCoord);
       }
     }
   };
